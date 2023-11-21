@@ -5,7 +5,7 @@ from pydantic_settings import BaseSettings, PydanticBaseSettingsSource, EnvSetti
 from typing import List, Type, Tuple, Any, Dict
 import yaml
 
-from sys_base_classes import EmailLogCfg
+from sys_base_classes import EmailCfg, LogCfg
 
 
 class BaseCfg(PydanticBaseSettingsSource):
@@ -13,16 +13,23 @@ class BaseCfg(PydanticBaseSettingsSource):
     获取配置文件中的数据
     :return:
     """
-    # file_path = r"../configs/config.yaml"
+
+    def __init__(self, settings_cls: type[BaseSettings]):
+        super().__init__(settings_cls)
+        self.cfg_data: dict = {}
+        self.init_data()
+
+    def init_data(self):
+        encoding = self.config.get('env_file_encoding')
+        with open('../configs/config.yaml', 'r', encoding=encoding) as file:
+            self.cfg_data = yaml.safe_load(file)
 
     def get_field_value(
             self, field: FieldInfo, field_name: str
     ) -> Tuple[Any, str, bool]:
-        encoding = self.config.get('env_file_encoding')
-        with open('../configs/config.yaml', 'r', encoding=encoding) as file:
-            prime_service = yaml.safe_load(file)
-            field_value = prime_service.get(field_name)
-            return EmailLogCfg(**field_value), field_name, False
+
+        field_value = self.cfg_data.get(field_name)
+        return field.annotation(**field_value), field_name, False
 
     def prepare_field_value(self, field_name: str, field: FieldInfo, value: Any, value_is_complex: bool) -> Any:
         return value
@@ -47,7 +54,8 @@ class Settings(BaseSettings):
     # numbers: List[int]
     model_config = SettingsConfigDict(env_file_encoding='utf-8')
 
-    Email: EmailLogCfg
+    Email: EmailCfg
+    Log: LogCfg
 
     @classmethod
     def settings_customise_sources(
@@ -68,3 +76,4 @@ class Settings(BaseSettings):
 
 setting = Settings()
 email_cfg = setting.Email
+log_cfg = setting.Log

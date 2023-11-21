@@ -1,4 +1,4 @@
-import logging
+from setting import LogCfg
 import time
 
 def log_message(msg):

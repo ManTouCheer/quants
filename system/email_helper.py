@@ -2,7 +2,13 @@ from __future__ import annotations
 import smtplib
 from email.mime.text import MIMEText
 from email.utils import formataddr
+
+from log_helper import LogHelper
 from setting import email_cfg
+from system.decorator import cost_time
+
+logger = LogHelper(name ="quants.email_helper", level="INFO")
+
 
 class EmailHelper(object):
 
@@ -21,6 +27,7 @@ class EmailHelper(object):
         email_cls.port = port
         return email_cls
 
+    @cost_time
     def send_message(self, recipient_email: str, msg_text: str):
         # 登录服务器
         message = MIMEText(msg_text)
@@ -42,7 +49,8 @@ class EmailHelper(object):
             print("发送邮件失败", e)
 
 
-recipient_email = "lslishanls@163.com"
-email_helper = EmailHelper()
-email_helper.send_message(recipient_email, msg_text="测试发送纯文本")
-
+if __name__ == "__main__":
+    recipient_email = "lslishanls@163.com"
+    email_helper = EmailHelper()
+    email_helper.send_message(recipient_email, msg_text="测试发送纯文本")
+    # logger.info("finish")

@@ -4,7 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.edge.service import Service
+
 
 
 def get_daily_data(fund_website: str, driver: webdriver.Edge):
@@ -47,18 +47,12 @@ def get_daily_data(fund_website: str, driver: webdriver.Edge):
         # print(f"{data_list[idx]}: {data_list[idx + 1]} {data_list[idx + 2]}")
         data_x.append(float(data_list[idx + 1]))
         data_y.append(1-(float(data_list[idx + 2]) - 85)/425.0)
-    driver.close()
+
 
     return data_x, data_y
 
 
-def get_driver() -> webdriver.Edge:
-    driver_path = r"D:\Python3_11\msedgedriver.exe"
-    driver = webdriver.Edge(service=Service(executable_path=driver_path))
-    return driver
-
-
-def get_open_fund_website(base_web=r"http://fund.eastmoney.com/data/"):
+def get_open_fund_website(base_web=r"http://quote.eastmoney.com/center/gridlist.html"):
     """
     获取全部可开放式基金网页
     :return:

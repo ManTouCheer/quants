@@ -4,7 +4,7 @@ from email.mime.text import MIMEText
 from email.utils import formataddr
 
 from log_helper import LogHelper
-from setting import email_cfg
+from configs.setting import email_cfg
 from system.decorator import cost_time
 
 logger = LogHelper(name ="quants.email_helper", level="INFO")

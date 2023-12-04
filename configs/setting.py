@@ -1,11 +1,9 @@
-from pathlib import Path
-
 from pydantic.fields import FieldInfo
-from pydantic_settings import BaseSettings, PydanticBaseSettingsSource, EnvSettingsSource, SettingsConfigDict
-from typing import List, Type, Tuple, Any, Dict
+from pydantic_settings import BaseSettings, PydanticBaseSettingsSource, SettingsConfigDict
+from typing import Type, Tuple, Any, Dict
 import yaml
 
-from sys_base_classes import EmailCfg, LogCfg
+from base_class.sys_base_classes import EmailCfg, LogCfg
 
 
 class BaseCfg(PydanticBaseSettingsSource):
@@ -21,7 +19,7 @@ class BaseCfg(PydanticBaseSettingsSource):
 
     def init_data(self):
         encoding = self.config.get('env_file_encoding')
-        with open('../configs/config.yaml', 'r', encoding=encoding) as file:
+        with open('config.yaml', 'r', encoding=encoding) as file:
             self.cfg_data = yaml.safe_load(file)
 
     def get_field_value(
